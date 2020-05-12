@@ -92,6 +92,13 @@ updateAnchorPeers 0 1
 echo "Updating anchor peers for org2..."
 updateAnchorPeers 0 2
 
+# add for chaincode using go language
+echo "zhangying: install go packages"
+cd /opt/gopath/src/github.com/hyperledger/fabric-samples/chaincode/abstore/go
+go mod vendor
+cd -
+
+
 if [ "${NO_CHAINCODE}" != "true" ]; then
 
 	## at first we package the chaincode
