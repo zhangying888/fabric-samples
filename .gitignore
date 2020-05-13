@@ -14,6 +14,6 @@ vendor/
 .vscode
 .gradle
 .idea
-/first-network/mycc.tar.gz
+/first-network/*.tar.gz
 /first-network/log.txt
 /first-network/log2.txt
