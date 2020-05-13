@@ -24,7 +24,7 @@ const CommercialPaper = require('../contract/lib/paper.js');
 async function main() {
 
     // A wallet stores a collection of identities for use
-    const wallet = await Wallets.newFileSystemWallet('../identity/user/isabella/wallet');
+    const wallet = await Wallets.newFileSystemWallet('/tmp/identity/user/isabella/wallet');
 
     // A gateway defines the peers used to access Fabric networks
     const gateway = new Gateway();
@@ -37,7 +37,7 @@ async function main() {
         const userName = 'isabella';
 
         // Load connection profile; will be used to locate a gateway
-        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connection-org2.yaml', 'utf8'));
+        let connectionProfile = yaml.safeLoad(fs.readFileSync('/home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/connection-org2.yaml', 'utf8'));
 
         // Set connection options; identity and wallet
         let connectionOptions = {
