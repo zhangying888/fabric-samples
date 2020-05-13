@@ -15,4 +15,4 @@ vendor/
 .gradle
 .idea
 /first-network/mycc.tar.gz
-/first-network/log*
+/first-network/log*.txt
