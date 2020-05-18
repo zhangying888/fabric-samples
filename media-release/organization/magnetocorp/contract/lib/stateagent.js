@@ -8,12 +8,14 @@ SPDX-License-Identifier: Apache-2.0
 const StateManager = require('./../ledger-api/statemanager.js');
 
 const Editor = require('./editor.js');
+const Reporter = require('./reporter.js');
 
 class StateAgent extends StateManager {
 
     constructor(ctx) {
         super(ctx, 'org.mediachain.statemanager');
         this.use(Editor);
+        this.use(Reporter);
     }
 
     async add(editor) {

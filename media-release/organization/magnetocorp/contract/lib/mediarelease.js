@@ -9,6 +9,7 @@ const { Contract, Context } = require('fabric-contract-api');
 
 // PaperNet specifc classes
 const Editor = require('./editor.js');
+const Reporter = require('./reporter.js');
 const StateAgent = require('./stateagent.js');
 
 /**
@@ -80,6 +81,20 @@ class MediaReleaseContract extends Contract {
         let paperKey = Editor.makeKey([mcAddress]);
         let paper = await ctx.stateAgent.get(paperKey);
         return paper;
+    }
+
+    async addReporter(ctx, mcAddress, currentState, globalID, email, phone, identityCard, signature) {
+        // mcAddress, currentState, globalID, email, phone, identityCard, signature
+        let reporter = Reporter.createInstance(mcAddress, currentState, globalID, email, phone, identityCard, signature);
+        // TODO: verify user signature
+        await ctx.stateAgent.add(reporter);
+        return reporter;
+    }
+
+    async getReporter(ctx, mcAddress) {
+        let reporterKey = Reporter.makeKey([mcAddress]);
+        let reporter = await ctx.stateAgent.get(reporterKey);
+        return reporter;
     }
 
 }
