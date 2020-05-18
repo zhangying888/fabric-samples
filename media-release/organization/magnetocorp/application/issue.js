@@ -65,13 +65,14 @@ async function main() {
         console.log('Submit commercial paper issue transaction.');
 
         const issueResponse = await contract.submitTransaction('addEditor', 'MagnetoCorp', 'active');
+        // const issueResponse = await contract.submitTransaction('getEditor', 'MagnetoCorp');
 
         // process response
         console.log('Process issue transaction response.' + issueResponse);
 
         let paper = Editor.fromBuffer(issueResponse);
 
-        console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully issued for value ${paper.faceValue}`);
+        console.log(`Editor : ${paper.mcAddress} successfully issued for value ${paper.currentState}`);
         console.log('Transaction complete.');
 
     } catch (error) {
