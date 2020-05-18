@@ -17,7 +17,7 @@ const ResourceType = {
 class VersionHead extends State {
 
     constructor(obj) {
-        super(VersionHead.getClass(), [obj.type, obj.guid]);
+        super(VersionHead.getClass(), [obj.type, obj.globalID]);
         Object.assign(this, obj);
     }
 
@@ -32,12 +32,12 @@ class VersionHead extends State {
         this.type = type;
     }
 
-    getGuid() {
-        return this.guid;
+    getGlobalID() {
+        return this.globalID;
     }
 
-    setGuid(guid) {
-        this.guid = guid;
+    setGlobalID(globalID) {
+        this.globalID = globalID;
     }
 
     getHead() {
@@ -67,8 +67,8 @@ class VersionHead extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(type, guid, head) {
-        return new VersionHead({ type, guid, head });
+    static createInstance(type, globalID, head) {
+        return new VersionHead({ type, globalID, head });
     }
 
     static getClass() {
