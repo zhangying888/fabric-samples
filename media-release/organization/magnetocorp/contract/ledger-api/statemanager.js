@@ -11,16 +11,15 @@ const State = require('./state.js');
  * than the container containing a link to the state. This minimizes collisions
  * for parallel transactions on different states.
  */
-class StateList {
+class StateManager {
 
     /**
      * Store Fabric context for subsequent API access, and name of list
      */
-    constructor(ctx, listName) {
+    constructor(ctx, managerName) {
         this.ctx = ctx;
-        this.name = listName;
+        this.name = managerName;
         this.supportedClasses = {};
-
     }
 
     /**
@@ -69,4 +68,4 @@ class StateList {
 
 }
 
-module.exports = StateList;
+module.exports = StateManager;

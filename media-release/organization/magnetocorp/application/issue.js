@@ -18,7 +18,7 @@ SPDX-License-Identifier: Apache-2.0
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
-const CommercialPaper = require('../contract/lib/paper.js');
+const Editor = require('../contract/lib/editor.js');
 
 // Main program function
 async function main() {
@@ -43,7 +43,7 @@ async function main() {
         let connectionOptions = {
             identity: userName,
             wallet: wallet,
-            discovery: { enabled:true, asLocalhost: true }
+            discovery: { enabled: true, asLocalhost: true }
         };
 
         // Connect to gateway using application specified parameters
@@ -64,12 +64,12 @@ async function main() {
         // issue commercial paper
         console.log('Submit commercial paper issue transaction.');
 
-        const issueResponse = await contract.submitTransaction('issue', 'MagnetoCorp', '00001', '2020-05-31', '2020-11-30', '5000000');
+        const issueResponse = await contract.submitTransaction('addEditor', 'MagnetoCorp', 'active');
 
         // process response
-        console.log('Process issue transaction response.'+issueResponse);
+        console.log('Process issue transaction response.' + issueResponse);
 
-        let paper = CommercialPaper.fromBuffer(issueResponse);
+        let paper = Editor.fromBuffer(issueResponse);
 
         console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully issued for value ${paper.faceValue}`);
         console.log('Transaction complete.');
