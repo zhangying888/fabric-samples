@@ -11,6 +11,9 @@ const { Contract, Context } = require('fabric-contract-api');
 const Editor = require('./editor.js');
 const Reporter = require('./reporter.js');
 const StateAgent = require('./stateagent.js');
+const Clue = require('./clue.js');
+const Material = require('./material.js');
+const VersionHead = require('./versionhead.js');
 
 /**
  * A custom context provides easy access to list of all commercial papers
@@ -97,6 +100,17 @@ class MediaReleaseContract extends Contract {
         return reporter;
     }
 
+    /*
+    materials: materials array, every material represent by a [material_global_id:version_code]
+    */
+    async addClue(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature) {
+        //version code key 不能已经存在        
+        // let versionHead = VersionHead.
+        // VersionCode 应该只能是1        
+        let clue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
+        await ctx.stateAgent.add(clue);
+        return clue;
+    }
 }
 
 module.exports = MediaReleaseContract;

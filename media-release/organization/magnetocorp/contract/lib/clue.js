@@ -8,35 +8,53 @@ SPDX-License-Identifier: Apache-2.0
 const State = require('./../ledger-api/state.js');
 
 // Enumerate commercial paper state values
-const MaterialState = {
+const ClueState = {
     PUBLIC: "public",
     SECRET: "secret"
 };
 
-/**
- * CommercialPaper class extends State class
- * Class will be used by application and smart contract to define a paper
- */
-class Material extends State {
+class Clue extends State {
     /*
-  `PublishDate` int(11) unsigned DEFAULT '0',
-  `ContentHash`,
+  `SetPublishDate` varchar(255) DEFAULT NULL,
+  `Category` int(11) DEFAULT NULL,
+  `ChannelCode` varchar(255) DEFAULT NULL,
   `User` int(11) DEFAULT NULL,
+  `TotalPage` int(11) DEFAULT '1',
+  `OrderNumber` bigint(20) unsigned DEFAULT '0',
   `Status` int(11) DEFAULT NULL,
+  `Active` tinyint(4) DEFAULT NULL,
   `IsPhotoNews` tinyint(4) DEFAULT NULL,
+  `DocTop` int(11) DEFAULT '0',
+  `DocTopTime` int(11) DEFAULT '0',
+  `Random` int(11) DEFAULT NULL,
+  `Weight` int(11) DEFAULT NULL,
   `CreateDate` int(11) unsigned DEFAULT '0',
   `ModifiedDate` int(11) unsigned DEFAULT '0',
   `GenerateFileDate` int(11) unsigned DEFAULT '0',
   `Photo` varchar(250) DEFAULT NULL,
   `ModifiedUser` int(11) DEFAULT NULL,
-  `SourceName` varchar(250) DEFAULT NULL,
+  `IsDoption` int(11) DEFAULT '0',
+  `Province` int(11) DEFAULT '0',
+  `City` int(11) DEFAULT '0',
+  `County` int(11) DEFAULT '0',
+  `ClueForm` varchar(250) DEFAULT '0',
+  `ClueArea` int(11) DEFAULT '0',
   `UserId` int(11) DEFAULT '0',
-  `SourceUrl` varchar(250) DEFAULT NULL,
-  `ClueGid` int(11) DEFAULT '0',
-  `ClueGroupid` int(11) DEFAULT '0',
+  `Company` int(11) DEFAULT '0',
+  `Longitude` double DEFAULT '0',
+  `Latitude` double DEFAULT NULL,
+  `ConfirmCount` int(11) DEFAULT NULL,
+  `ProvinceName` varchar(250) DEFAULT NULL,
+  `CityName` varchar(250) DEFAULT NULL,
+  `CountryName` varchar(250) DEFAULT NULL,
+  `ClueType` int(11) DEFAULT NULL,
+  `ClueAreaName` varchar(250) DEFAULT NULL,
+  `NewsLinkCount` int(11) DEFAULT '0',
+  `Score` int(11) DEFAULT '0',
+  `GroupConfirmCount` int(11) DEFAULT '0',
      */
     constructor(obj) {
-        super(Material.getClass(), [obj.globalID, obj.versionCode]);
+        super(Clue.getClass(), [obj.globalID, obj.versionCode]);
         Object.assign(this, obj);
     }
 
@@ -124,24 +142,16 @@ class Material extends State {
         this.modifiedDate = modifiedDate;
     }
 
-    getSourceName() {
-        return this.sourceName;
+    getMaterials() {
+        return this.materials;
     }
 
-    setSourceName(sourceName) {
-        this.sourceName = sourceName;
-    }
-
-    getSourceUrl() {
-        return this.sourceUrl;
-    }
-
-    setSourceUrl(sourceUrl) {
-        this.sourceUrl = sourceUrl;
+    setMaterials(materials) {
+        this.materials = materials;
     }
 
     static fromBuffer(buffer) {
-        return Material.deserialize(buffer);
+        return Clue.deserialize(buffer);
     }
 
     toBuffer() {
@@ -153,19 +163,19 @@ class Material extends State {
      * @param {Buffer} data to form back into the object
      */
     static deserialize(data) {
-        return State.deserializeClass(data, Material);
+        return State.deserializeClass(data, Clue);
     }
 
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceName, sourceUrl, signature) {
-        return new Material({ globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceName, sourceUrl, signature });
+    static createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature) {
+        return new Clue({ globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature });
     }
 
     static getClass() {
-        return 'org.mediachain.material';
+        return 'org.mediachain.clue';
     }
 }
 
-module.exports = Material;
+module.exports = Clue;

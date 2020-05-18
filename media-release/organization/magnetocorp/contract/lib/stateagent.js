@@ -9,6 +9,9 @@ const StateManager = require('./../ledger-api/statemanager.js');
 
 const Editor = require('./editor.js');
 const Reporter = require('./reporter.js');
+const VersionHead = require('./versionhead.js');
+const Clue = require('./clue.js');
+const Material = require('./material.js');
 
 class StateAgent extends StateManager {
 
@@ -16,6 +19,9 @@ class StateAgent extends StateManager {
         super(ctx, 'org.mediachain.statemanager');
         this.use(Editor);
         this.use(Reporter);
+        this.use(VersionHead);
+        this.use(Clue);
+        this.use(Material);
     }
 
     async add(editor) {

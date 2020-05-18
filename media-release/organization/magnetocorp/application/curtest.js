@@ -14,7 +14,9 @@ SPDX-License-Identifier: Apache-2.0
 
 'use strict';
 
+
 // Bring key classes into scope, most importantly Fabric SDK network class
+const assert = require('assert');
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
@@ -24,6 +26,10 @@ const Reporter = require('../contract/lib/reporter.js');
 function sleep(s) {
     // eslint-disable-next-line no-undef
     return new Promise(resolve => setTimeout(resolve, s * 1000));
+}
+
+async function addClue(contract) {
+
 }
 
 // Main program function
@@ -90,7 +96,7 @@ async function main() {
         sleep(10);
         const getReportResponse = await contract.submitTransaction('getReporter', 'reporter0001Address');
         let reporter0001 = Reporter.fromBuffer(getReportResponse);
-        console.log(`request reporter ${reqReporter.identityCard} response reporter: ${reporter0001.identityCard}`);
+        assert(reqReporter.identityCard === reporter0001.identityCard);
 
     } catch (error) {
 
