@@ -21,6 +21,14 @@ class VersionHead extends State {
         Object.assign(this, obj);
     }
 
+    static getClueKey(globalID) {
+        return this.makeKey([ResourceType.CLUE, globalID]);
+    }
+
+    static getMaterialKey(globalID) {
+        return this.makeKey([ResourceType.MATERIAL, globalID]);
+    }
+
     /**
      * Basic getters and setters
     */
@@ -40,12 +48,12 @@ class VersionHead extends State {
         this.globalID = globalID;
     }
 
-    getHead() {
-        return this.head;
+    getVersionCode() {
+        return this.versionCode;
     }
 
-    setHead(head) {
-        this.head = head;
+    setHead(versionCode) {
+        this.versionCode = versionCode;
     }
 
     static fromBuffer(buffer) {

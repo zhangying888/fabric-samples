@@ -105,11 +105,45 @@ class MediaReleaseContract extends Contract {
     */
     async addClue(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature) {
         //version code key 不能已经存在        
-        // let versionHead = VersionHead.
-        // VersionCode 应该只能是1        
+        let clueKey = VersionHead.getClueKey(globalID);
+        let nilClue = await ctx.stateAgent.get(clueKey);
+        if (nilClue != null) {
+            throw new Error(`add clue failed, ${clueKey} exist`);
+        }
+        // VersionCode 应该只能是1  
+        if (versionCode != 1) {
+            throw new Error('version code should start at 1');
+        }
         let clue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
         await ctx.stateAgent.add(clue);
         return clue;
+    }
+
+    async updateClue(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature) {
+        let clueKey = VersionHead.getClueKey(globalID);
+        let oldVersionHead = await ctx.stateAgent.get(clueKey);
+        if (oldVersionHead.versionCode != versionCode + 1) {
+            throw new Error('invalid version code');
+        }
+
+        let clue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
+        await ctx.stateAgent.update(clue);
+        return clue;
+    }
+
+    async getClue(ctx, globalID) {
+        let clueHead = VersionHead.getClueKey(globalID);
+        let versionHead = await ctx.stateAgent.get(clueHead);
+        if (versionHead == null) {
+            return null;
+        }
+
+        return await this.getClueByVersionCode(ctx, globalID, versionHead.versionCode);
+    }
+
+    async getClueByVersionCode(ctx, globalID, versionCode) {
+        let key = Clue.makeKey([globalID, versionCode]);
+        return await ctx.stateAgent.get(key);
     }
 }
 
