@@ -100,20 +100,34 @@ class MediaReleaseContract extends Contract {
         return reporter;
     }
 
+    async addVersionHead(ctx, type, globalID, versionCode) {
+        let head = VersionHead.createInstance(type, globalID, versionCode)
+        await ctx.stateAgent.add(head);
+        return head;
+    }
+
+    async getVersionHead(ctx, type, globalID) {
+        let response = await ctx.stateAgent.get(VersionHead.makeKey([type, globalID]));
+        return response;
+    }
+
     /*
     materials: materials array, every material represent by a [material_global_id:version_code]
     */
     async addClue(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature) {
         //version code key 不能已经存在        
-        let clueKey = VersionHead.getClueKey(globalID);
-        let nilClue = await ctx.stateAgent.get(clueKey);
-        if (nilClue != null) {
-            throw new Error(`add clue failed, ${clueKey} exist`);
-        }
-        // VersionCode 应该只能是1  
-        if (versionCode != 1) {
-            throw new Error('version code should start at 1');
-        }
+        // let clueKey = VersionHead.getClueKey(globalID);
+        // let nilClue = await ctx.stateAgent.get(clueKey);
+        // if (nilClue != null) {
+        //     throw new Error(`add clue failed, ${clueKey} exist`);
+        // }
+        // // VersionCode 应该只能是1  
+        // if (versionCode != 1) {
+        //     throw new Error('version code should start at 1');
+        // }
+        let versionHead = VersionHead.createInstance('clue', globalID, versionCode);
+        await ctx.stateAgent.add(versionHead);
+        // check material exist
         let clue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
         await ctx.stateAgent.add(clue);
         return clue;
@@ -132,8 +146,8 @@ class MediaReleaseContract extends Contract {
     }
 
     async getClue(ctx, globalID) {
-        let clueHead = VersionHead.getClueKey(globalID);
-        let versionHead = await ctx.stateAgent.get(clueHead);
+        let clueHeadKey = VersionHead.getClueKey(globalID);
+        let versionHead = await ctx.stateAgent.get(clueHeadKey);
         if (versionHead == null) {
             return null;
         }

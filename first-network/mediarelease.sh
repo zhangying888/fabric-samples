@@ -106,7 +106,7 @@ peer chaincode invoke -o orderer.example.com:7050  --tls true \
   --peerAddresses peer0.org2.example.com:9051 \
   --tlsRootCertFiles /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
   --channelID mychannel --name papercontract \
-  -c '{"Args":["org.papernet.commercialpaper:instantiate"]}'  \
+  -c '{"Args":["org.mediachain.mediarelease:instantiate"]}'  \
   --waitForEvent
 
 peer chaincode query --channelID mychannel \

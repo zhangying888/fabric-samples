@@ -28,11 +28,11 @@ class State {
         return this.key;
     }
 
-    getSplitKey(){
+    getSplitKey() {
         return State.splitKey(this.key);
     }
 
-    getCurrentState(){
+    getCurrentState() {
         return this.currentState;
     }
 
@@ -86,10 +86,13 @@ class State {
      * @param (String[]) keyParts
      */
     static makeKey(keyParts) {
+        if (!Array.isArray(keyParts)) {
+            throw new Error('keyParts should be array');
+        }
         return keyParts.map(part => JSON.stringify(part)).join(':');
     }
 
-    static splitKey(key){
+    static splitKey(key) {
         return key.split(':');
     }
 

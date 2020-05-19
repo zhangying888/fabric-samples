@@ -22,6 +22,7 @@ class VersionHead extends State {
     }
 
     static getClueKey(globalID) {
+        //
         return this.makeKey([ResourceType.CLUE, globalID]);
     }
 
@@ -52,7 +53,7 @@ class VersionHead extends State {
         return this.versionCode;
     }
 
-    setHead(versionCode) {
+    setVersionCode(versionCode) {
         this.versionCode = versionCode;
     }
 
@@ -75,8 +76,8 @@ class VersionHead extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(type, globalID, head) {
-        return new VersionHead({ type, globalID, head });
+    static createInstance(type, globalID, versionCode) {
+        return new VersionHead({ type, globalID, versionCode });
     }
 
     static getClass() {

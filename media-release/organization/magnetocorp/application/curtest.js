@@ -22,14 +22,51 @@ const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const Editor = require('../contract/lib/editor.js');
 const Reporter = require('../contract/lib/reporter.js');
+const Clue = require('../contract/lib/clue.js');
+const VersionHead = require('../contract/lib/versionhead.js');
 
 function sleep(s) {
     // eslint-disable-next-line no-undef
     return new Promise(resolve => setTimeout(resolve, s * 1000));
 }
 
-async function addClue(contract) {
+async function addVersionHead(contract) {
+    let globalID = 'guid10086';
+    let versionCode = 1;
+    let response = await contract.submitTransaction('addVersionHead', 'clue', globalID, versionCode);
+    let versionHead = VersionHead.fromBuffer(response);
+    console.log(`addVersionHead response ${response}`);
+    return versionHead;
+}
 
+async function getVersionHead(contract, versionHead) {
+    let response = await contract.submitTransaction('getVersionHead', versionHead.type, versionHead.globalID);
+    let respHead = VersionHead.fromBuffer(response);
+    assert(versionHead.versionCode === respHead.versionCode);
+    return respHead;
+}
+
+async function addClue(contract) {
+    let globalID = 'guid0001';
+    let versionCode = 1;
+    let title = 'some title';
+    let publishDate = 'secondnow';
+    let contentHash = '0xbac3090257be280087D8bdc530265203d105b120';
+    let status = 'secret';
+    let user = 'reportter0001@mediachain.com';
+    let modifiedDate = publishDate;
+    let materials = ['mguid:0001'];
+    let signature = 'dummy_signature_by_user';
+    let response = await contract.submitTransaction('addClue', globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
+    return Clue.fromBuffer(response);
+}
+
+async function getClue(contract) {
+    let globalID = 'guid0001';
+    let response = await contract.submitTransaction('getClue', globalID);
+    console.log(response);
+    let clue = Clue.fromBuffer(response);
+    return clue;
 }
 
 // Main program function
@@ -73,31 +110,14 @@ async function main() {
 
         const contract = await network.getContract('papercontract');
 
-        // issue commercial paper
-        console.log('Submit commercial paper issue transaction.');
 
-        const issueResponse = await contract.submitTransaction('addEditor', 'MagnetoCorp', 'active');
+        // --------------------------------------------------------------------------------------------
 
-        sleep(2);
-        // const issueResponse = await contract.submitTransaction('getEditor', 'MagnetoCorp');
-
-        // process response
-        console.log('Process issue transaction response.' + issueResponse);
-
-        let paper = Editor.fromBuffer(issueResponse);
-
-        console.log(`Editor : ${paper.mcAddress} successfully issued for value ${paper.currentState}`);
-        console.log('Transaction complete.');
-
-        // mcAddress, currentState, globalID, email, phone, identityCard, signature
-        const addReporterResponse = await contract.submitTransaction('addReporter',
-            'reporter0001Address', 'active', 'companyDBId0001', 'reporter0001@mediachain.com', '13888888888', '100000199001019999', '0xaac3090257be280087D8bdc530265203d105b120');
-        let reqReporter = Reporter.fromBuffer(addReporterResponse);
-        sleep(10);
-        const getReportResponse = await contract.submitTransaction('getReporter', 'reporter0001Address');
-        let reporter0001 = Reporter.fromBuffer(getReportResponse);
-        assert(reqReporter.identityCard === reporter0001.identityCard);
-
+        let clue = await addClue(contract);
+        sleep(5);
+        let retClue = await getClue(contract);
+        assert(clue.globalID === retClue.globalID);
+        assert(clue.contentHash === retClue.contentHash);
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);
