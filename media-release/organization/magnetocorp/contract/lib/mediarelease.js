@@ -111,6 +111,30 @@ class MediaReleaseContract extends Contract {
         return response;
     }
 
+
+    async addMaterial(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceName, sourceUrl, signature) {
+        let versionHead = VersionHead.createInstance('material', globalID, versionCode);
+        await ctx.stateAgent.add(versionHead);
+
+        let material = Material.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceName, sourceUrl, signature);
+        await ctx.stateAgent.add(material);
+        return material;
+    }
+
+    async getMaterial(ctx, globalID) {
+        let materialHeadKey = VersionHead.getMaterialKey(globalID);
+        let versionHead = await ctx.stateAgent.get(materialHeadKey);
+        if (versionHead == null) {
+            return null;
+        }
+        return await this.getMaterialByVersionCode(ctx, globalID, versionHead.versionCode);
+    }
+
+    async getMaterialByVersionCode(ctx, globalID, versionCode) {
+        let key = Material.makeKey([globalID, versionCode]);
+        return await ctx.stateAgent.get(key);
+    }
+
     /*
     materials: materials array, every material represent by a [material_global_id:version_code]
     */
