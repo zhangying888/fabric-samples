@@ -18,6 +18,8 @@
     "author": "hyperledger",
     "license": "Apache-2.0",
     "dependencies": {
+        "crypto": "^1.0.1",
+        "elliptic": "^6.5.2",
         "fabric-contract-api": "^2.0.0",
         "fabric-shim": "^2.0.0"
     },
