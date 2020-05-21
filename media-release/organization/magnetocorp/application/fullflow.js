@@ -139,11 +139,11 @@ async function main() {
 
         // --------------------------------------------------------------------------------------------
 
-        let clue = await addClue(contract);
-        sleep(5);
-        let retClue = await getClue(contract);
-        assert(clue.globalID === retClue.globalID);
-        assert(clue.contentHash === retClue.contentHash);
+        // let clue = await addClue(contract);
+        // sleep(5);
+        // let retClue = await getClue(contract);
+        // assert(clue.globalID === retClue.globalID);
+        // assert(clue.contentHash === retClue.contentHash);
 
         // let originMaterial = await addMaterial(contract);
         // sleep(5);
