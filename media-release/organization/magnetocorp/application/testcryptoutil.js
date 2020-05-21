@@ -26,7 +26,8 @@ function main() {
         let msg = '123456';
         let contentHash = MyCrypto.hash(msg);
         let signature = MyCrypto.signMsg(contentHash, fullKey);
-        let verifyResult = onlyPubKey.verify(contentHash, signature);
+        // let verifyResult = onlyPubKey.verify(contentHash, signature);
+        let verifyResult = MyCrypto.verifySig(signature, contentHash, testPublicKey);
         assert(verifyResult);
     } catch (error) {
 

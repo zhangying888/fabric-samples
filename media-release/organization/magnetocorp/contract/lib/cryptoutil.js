@@ -33,6 +33,15 @@ class MyCrypto {
     static signMsg(msg, key) {
         return elliptic.utils.toHex(ecdsa.sign(msg, key).toDER());
     }
+
+    static verify(signature, msg, pubkey) {
+        return pubkey.verify(msg, signature);
+    }
+
+    static verifySig(signature, msg, pubkeyStr) {
+        let pubKey = ecdsa.keyFromPublic(pubkeyStr, 'hex');
+        return pubKey.verify(msg, signature);
+    }
 }
 
 module.exports = MyCrypto;

@@ -25,10 +25,40 @@ const Reporter = require('../contract/lib/reporter.js');
 const Clue = require('../contract/lib/clue.js');
 const VersionHead = require('../contract/lib/versionhead.js');
 const Material = require('../contract/lib/material.js');
+const MyCrypto = require('../contract/lib/cryptoutil.js');
+
+const reporterPublicKey = '04c30eb86b6fc77f5caa349f976a3cdfb7ffb93b55b75281ccdf695f78707e6287ef82e9e8622aa5dd01806743094a495e82cbcb8b0501244e5e213630dcada47d';
+const reporterPrivateKey = 'b605a68ecbb47ec1aa4596d66a5583193796b4390f0e819f9f237d7248ff7c9e';
+
 
 function sleep(s) {
     // eslint-disable-next-line no-undef
     return new Promise(resolve => setTimeout(resolve, s * 1000));
+}
+
+async function addReporter(contract) {
+    // mcAddress, currentState, globalID, email, phone, identityCard, signature
+    let mcAddress = reporterPublicKey;
+    let globalID = 'reporter0001';
+    let email = 'r0001@mediachain.com';
+    let phone = '18812345678';
+    let identityCard = '110011199001011234';
+
+    let reporter = Reporter.createInstance(mcAddress, 'active', globalID, email, phone, identityCard);
+
+    reporter.setSignature(MyCrypto.signMsg(reporter.getMsgHash(), MyCrypto.importFromPrivateKey(reporterPrivateKey)));
+
+
+    let response = await contract.submitTransaction(
+        'addReporter', reporter.mcAddress, reporter.currentState, reporter.globalID, reporter.email, reporter.phone, reporter.identityCard, reporter.signature);
+    let retReporter = Reporter.fromBuffer(response);
+    return retReporter;
+}
+
+async function getReporter(contract) {
+    let mcAddress = reporterPublicKey;
+    let response = await contract.submitTransaction('getReporter', mcAddress);
+    return Reporter.fromBuffer(response);
 }
 
 async function addVersionHead(contract) {
@@ -136,20 +166,14 @@ async function main() {
 
         const contract = await network.getContract('papercontract');
 
+        await addReporter(contract);
+        sleep(5);
 
-        // --------------------------------------------------------------------------------------------
+        let reporter = await getReporter(contract);
+        console.log(reporter);
 
-        // let clue = await addClue(contract);
-        // sleep(5);
-        // let retClue = await getClue(contract);
-        // assert(clue.globalID === retClue.globalID);
-        // assert(clue.contentHash === retClue.contentHash);
 
-        // let originMaterial = await addMaterial(contract);
-        // sleep(5);
-        // let retMaterial = await getMaterial(contract);
-        // assert(originMaterial.globalID === retMaterial.globalID);
-        // assert(originMaterial.contentHash === retMaterial.contentHash);
+        console.log('add test reporter');
 
     } catch (error) {
 

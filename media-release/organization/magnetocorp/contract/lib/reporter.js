@@ -6,6 +6,7 @@ SPDX-License-Identifier: Apache-2.0
 
 // Utility class for ledger state
 const State = require('./../ledger-api/state.js');
+const MyCrypto = require('./cryptoutil');
 
 // Enumerate commercial paper state values
 const ReporterState = {
@@ -30,7 +31,8 @@ class Reporter extends State {
     }
 
     getMsgHash() {
-
+        let content4Hash = [this.mcAddress, this.globalID, this.email, this.phone, this.identityCard].join();
+        return MyCrypto.hash(content4Hash);
     }
 
     getSignature() {

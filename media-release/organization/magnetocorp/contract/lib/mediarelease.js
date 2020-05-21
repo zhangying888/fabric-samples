@@ -14,6 +14,7 @@ const StateAgent = require('./stateagent.js');
 const Clue = require('./clue.js');
 const Material = require('./material.js');
 const VersionHead = require('./versionhead.js');
+const MyCrypto = require('./cryptoutil.js');
 
 /**
  * A custom context provides easy access to list of all commercial papers
@@ -89,6 +90,9 @@ class MediaReleaseContract extends Contract {
     async addReporter(ctx, mcAddress, currentState, globalID, email, phone, identityCard, signature) {
         // mcAddress, currentState, globalID, email, phone, identityCard, signature
         let reporter = Reporter.createInstance(mcAddress, currentState, globalID, email, phone, identityCard, signature);
+        if (!MyCrypto.verifySig(signature, reporter.getMsgHash(), mcAddress)) {
+            throw new Error('invalid signature for addReporter');
+        }
         // TODO: verify user signature
         await ctx.stateAgent.add(reporter);
         return reporter;
