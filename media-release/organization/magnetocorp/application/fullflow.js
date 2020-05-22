@@ -73,7 +73,7 @@ async function addVersionHead(contract) {
 async function getVersionHead(contract, versionHead) {
     let response = await contract.submitTransaction('getVersionHead', versionHead.type, versionHead.globalID);
     let respHead = VersionHead.fromBuffer(response);
-    assert(versionHead.versionCode === respHead.versionCode);
+    // assert(versionHead.versionCode === respHead.versionCode);
     return respHead;
 }
 
@@ -83,26 +83,25 @@ async function addMaterial(contract) {
     let versionCode = 1;
     let title = 'some title';
     let publishDate = 'secondnow';
-    let contentHash = '0xbac3090257be280087D8bdc530265203d105b120';
+    let fileContentHash = 'bac3090257be280087D8bdc530265203d105b120';
     let status = 'secret';
-    let user = 'reportter0001@mediachain.com';
+    let user = reporterPublicKey;
     let modifiedDate = publishDate;
     let sourceName = 'apple.jpg';
     let sourceUrl = 's3.mediachain.org/apple.jpg';
     let signature = 'dummy_signature_by_user';
-    let response = await contract.submitTransaction('addMaterial', globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceName, sourceUrl, signature);
+    let response = await contract.submitTransaction('addMaterial', globalID, versionCode, title, publishDate, fileContentHash, status, user, modifiedDate, sourceName, sourceUrl, signature);
     return Material.fromBuffer(response);
 }
 
 async function getMaterial(contract) {
     let globalID = 'guid-material-0001';
     let response = await contract.submitTransaction('getMaterial', globalID);
-    console.log(response);
     let material = Material.fromBuffer(response);
     return material;
 }
 
-async function addClue(contract) {
+async function addClue(contract, materials) {
     let globalID = 'guid0001';
     let versionCode = 1;
     let title = 'some title';
@@ -111,7 +110,7 @@ async function addClue(contract) {
     let status = 'secret';
     let user = 'reportter0001@mediachain.com';
     let modifiedDate = publishDate;
-    let materials = ['mguid:0001'];
+    // let materials = ['mguid:0001'];
     let signature = 'dummy_signature_by_user';
     let response = await contract.submitTransaction('addClue', globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
     return Clue.fromBuffer(response);
@@ -170,11 +169,21 @@ async function main() {
         sleep(5);
 
         let reporter = await getReporter(contract);
-        console.log(reporter);
+        console.log(`reporter added, mcAddress: ${reporter.mcAddress}`);
 
+        await addMaterial(contract);
+        sleep(5);
+        let material = await getMaterial(contract);
+        let versionHead = await getVersionHead(contract, VersionHead.createInstance('material', 'guid-material-0001', 1));
+        console.log(versionHead);
+        console.log(material);
 
-        console.log('add test reporter');
-
+        let refMaterial = [`${material.globalID}:${material.versionCode}`];
+        console.log(refMaterial);
+        await addClue(contract, refMaterial);
+        sleep(2);
+        let clue = await getClue(contract);
+        console.log(clue);
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);

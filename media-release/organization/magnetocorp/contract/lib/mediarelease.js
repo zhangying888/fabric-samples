@@ -68,17 +68,6 @@ class MediaReleaseContract extends Contract {
         return paper;
     }
 
-    /**
-     * Buy commercial paper
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} issuer commercial paper issuer
-     * @param {Integer} paperNumber paper number for this issuer
-     * @param {String} currentOwner current owner of paper
-     * @param {String} newOwner new owner of paper
-     * @param {Integer} price price paid for this paper
-     * @param {String} purchaseDateTime time paper was purchased (i.e. traded)
-    */
     async getEditor(ctx, mcAddress) {
 
         // Retrieve the current paper using key fields provided

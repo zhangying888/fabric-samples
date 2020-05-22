@@ -8,9 +8,9 @@ SPDX-License-Identifier: Apache-2.0
 const State = require('./../ledger-api/state.js');
 
 const ResourceType = {
-    CLUE: "clue",
-    MATERIAL: "material",
-    TASK: "task"
+    CLUE: 'clue',
+    MATERIAL: 'material',
+    TASK: 'task'
 };
 
 
