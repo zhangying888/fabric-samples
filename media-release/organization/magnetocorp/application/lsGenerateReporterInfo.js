@@ -23,15 +23,17 @@ const ecdsa = new EC(elliptic.curves.p256);
 const fs = require('fs');
 const fse = require('fs-extra');
 const demoutil = require('./demoutil.js');
+const Reporter = require('../contract/lib/reporter.js');
 
-
-// const MyCrypto = require('../contract/lib/cryptoutil.js');
+const MyCrypto = require('../contract/lib/cryptoutil.js');
 
 process.argv.forEach(function (val, index, array) {
     //console.log(index + ': ' + val);
 });
 
-let reporterName = process.argv[2];
+const argvUserName = 'yueyunpeng';
+const argvGlobalId = 'mediachain0001';
+const argvIdentityCard = '110011199606061234';
 
 function writJson2File(path, content) {
     fse.writeJSONSync(path, content);
@@ -55,29 +57,27 @@ function generateReporterKey(name) {
     writJson2File(getUserCfgPath(name), obj);
 }
 
-function reporterApply(reporterName, mcAddress, globalID, timestamp, identityCard) {
-
-}
-
-generateReporterKey(reporterName);
-let obj = readJsonFromFile(getUserCfgPath(reporterName));
-console.log(obj);
-/*
-function generateReporterInfo() {
+function reporterApply(reporterName, globalID, identityCard) {
+    console.log('报道员在安全的环境下生成自己用于签名的公私钥，是报道员区块链身份的象征');
     let ecdsaKey = ecdsa.genKeyPair();
     let outPubKey = ecdsaKey.getPublic().encode('hex');
     let outPrivKey = ecdsaKey.getPrivate().toString('hex');
+    console.log(`generate ecdsa keypair for ${reporterName}:\n pubic key is:  ${outPubKey}\n private key is ${outPrivKey}`);
 
-
-    // mcAddress, currentState, globalID, email, phone, identityCard, signature
+    console.log('报道员使用私钥签名申请的时候关键字段');
     let mcAddress = outPubKey;
-    let globalID = 'reporter0001';
-    let timestamp = '18812345678';
-    let identityCard = '110011199001011234';
+    // let globalID = 'reporter0001';
+    let timestamp = demoutil.getDateTime();
+    // let identityCard = '110011199001011234';
 
-    let reporter = Reporter.createInstance(mcAddress, 'active', globalID, 'email', phone, identityCard, timestamp);
+    let reporter = Reporter.createInstance(mcAddress, 'active', globalID, 'ignore@email.com', '00000', identityCard, timestamp);
 
-    reporter.setSignature(MyCrypto.signMsg(reporter.getMsgHash(), MyCrypto.importFromPrivateKey(reporterPrivateKey)));
-    return retReporter;
+    reporter.setSignature(MyCrypto.signMsg(reporter.getMsgHash(), MyCrypto.importFromPrivateKey(outPrivKey)));
+    console.log(`mcaddress:  ${mcAddress}\nglobalId:  ${globalID}\nidentityCard:  ${identityCard}\ntimestamp:  ${timestamp}\nsignature:  ${reporter.getSignature()}`);
+
+    let obj = { username: reporterName, publicKey: outPubKey, privateKey: outPrivKey };
+    writJson2File(getUserCfgPath(reporterName), obj);
+
 }
-*/
+
+reporterApply(argvUserName, argvGlobalId, argvIdentityCard);

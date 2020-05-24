@@ -8,7 +8,7 @@ const moment = require('moment');
 
 class DemoUtil {
     static getDateTime() {
-        moment().format('yyyy-mm-dd:hh:mm:ss');
+        return moment().format('YYYY-MM-DD:HH:MM:SS');
     }
 }
 
