@@ -31,7 +31,7 @@ class Reporter extends State {
     }
 
     getMsgHash() {
-        let content4Hash = [this.mcAddress, this.globalID, this.email, this.phone, this.identityCard].join();
+        let content4Hash = [this.mcAddress, this.globalID, this.timestamp, this.identityCard].join();
         return MyCrypto.hash(content4Hash);
     }
 
@@ -41,6 +41,14 @@ class Reporter extends State {
 
     setSignature(signature) {
         this.signature = signature;
+    }
+
+    setTimestamp(timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    getTimestamp() {
+        return this.timestamp;
     }
 
     /**
@@ -126,8 +134,8 @@ class Reporter extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(mcAddress, currentState, globalID, email, phone, identityCard, signature) {
-        return new Reporter({ mcAddress, currentState, globalID, email, phone, identityCard, signature });
+    static createInstance(mcAddress, currentState, globalID, email, phone, identityCard, timestamp, signature) {
+        return new Reporter({ mcAddress, currentState, globalID, email, phone, identityCard, timestamp, signature });
     }
 
     static getClass() {
