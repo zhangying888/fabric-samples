@@ -69,7 +69,7 @@ export CC_PACKAGE_ID=`sed -n '/Package/{s/^Package ID: //; s/, Label:.*$//; p;}'
 # # # this returns the details of the chaincode packages installed on your peers
 peer lifecycle chaincode queryinstalled
 
-peer lifecycle chaincode approveformyorg --channelID $CHANNEL_NAME --name papercontract --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+peer lifecycle chaincode approveformyorg --channelID $CHANNEL_NAME --name mycc --version 1.0 --package-id $CC_PACKAGE_ID --sequence 1 --tls true --cafile /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 
 # # install package on peer0 of Org2
 CORE_PEER_MSPCONFIGPATH=/home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp 
@@ -79,18 +79,18 @@ CORE_PEER_TLS_ROOTCERT_FILE=/home/zy/go/src/github.com/hyperledger/fabric-sample
 peer lifecycle chaincode install cp.tar.gz
 peer lifecycle chaincode queryinstalled >&log2.txt
 export CC_PACKAGE_ID_2=`sed -n '/Package/{s/^Package ID: //; s/, Label:.*$//; p;}' log2.txt`
-peer lifecycle chaincode approveformyorg --channelID $CHANNEL_NAME --name papercontract --version 1.0 --package-id $CC_PACKAGE_ID_2 --sequence 1 --tls true --cafile /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+peer lifecycle chaincode approveformyorg --channelID $CHANNEL_NAME --name mycc --version 1.0 --package-id $CC_PACKAGE_ID_2 --sequence 1 --tls true --cafile /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 # sleep 20
 # # Once a sufficient number of channel members have approved a chaincode definition, one member can commit the definition to the channel
 # peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name mycc --version 1.0 --init-required --sequence 1 --tls true --cafile /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --output json
-peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name papercontract -v 1.0 --sequence 1
+peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name mycc -v 1.0 --sequence 1
 
 CORE_PEER_MSPCONFIGPATH=/home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 CORE_PEER_ADDRESS=peer0.org1.example.com:7051
 CORE_PEER_LOCALMSPID="Org1MSP"
 CORE_PEER_TLS_ROOTCERT_FILE=/home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 
-peer lifecycle chaincode commit -o orderer.example.com:7050 --channelID $CHANNEL_NAME --name papercontract --version 1.0 --sequence 1 \
+peer lifecycle chaincode commit -o orderer.example.com:7050 --channelID $CHANNEL_NAME --name mycc --version 1.0 --sequence 1 \
   --tls true \
   --cafile /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem \
   --peerAddresses peer0.org1.example.com:7051 \
@@ -105,12 +105,12 @@ peer chaincode invoke -o orderer.example.com:7050  --tls true \
   --tlsRootCertFiles /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt \
   --peerAddresses peer0.org2.example.com:9051 \
   --tlsRootCertFiles /home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
-  --channelID mychannel --name papercontract \
+  --channelID mychannel --name mycc \
   -c '{"Args":["org.mediachain.mediarelease:instantiate"]}'  \
   --waitForEvent
 
 peer chaincode query --channelID mychannel \
-                                        --name papercontract \
+                                        --name mycc \
                                         -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}'
 
 # peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'                                          

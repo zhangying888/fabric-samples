@@ -128,7 +128,7 @@ async function getClue(contract) {
 async function main() {
 
     // A wallet stores a collection of identities for use
-    const wallet = await Wallets.newFileSystemWallet('/tmp/identity/user/isabella/wallet');
+    const wallet = await Wallets.newFileSystemWallet('/tmp/test/identity/user/isabella/wallet');
 
     // A gateway defines the peers used to access Fabric networks
     const gateway = new Gateway();
@@ -163,7 +163,7 @@ async function main() {
         // Get addressability to commercial paper contract
         console.log('Use org.papernet.commercialpaper smart contract.');
 
-        const contract = await network.getContract('papercontract');
+        const contract = await network.getContract('mycc');
 
         await addReporter(contract);
         sleep(5);
