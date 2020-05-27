@@ -16,7 +16,8 @@
     "fabric-network": "^2.1.0",
     "fs-extra": "^9.0.0",
     "js-yaml": "^3.12.0",
-    "moment": "^2.26.0"
+    "moment": "^2.26.0",
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "eslint": "^5.6.0"
