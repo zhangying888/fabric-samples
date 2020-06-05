@@ -12,6 +12,7 @@ const Clue = require('../contract/lib/clue.js');
 const VersionHead = require('../contract/lib/versionhead.js');
 const Material = require('../contract/lib/material.js');
 
+
 async function addEditor(contract, paramObj) {
     // mcAddress, currentState, globalID, email, phone, identityCard, signature
     let mcAddress = paramObj.mcaddress;
@@ -26,11 +27,30 @@ async function addEditor(contract, paramObj) {
     return retEditor;
 }
 
+async function addReporter(contract, paramObj) {
+    // mcAddress, currentState, globalID, email, phone, identityCard, signature
+    //{ mcaddress, globalId, timestamp, identityCard, signature }
+    let mcAddress = paramObj.mcaddress;
+    let globalID = paramObj.globalId;
+    let email = 'dummy@mediachain.com';
+    let phone = '18812345678';
+    let identityCard = paramObj.identityCard;
+    let currentState = 'active';
+
+    let tx = contract.createTransaction('addReporter');
+    // mcAddress, currentState, globalID, email, phone, identityCard, timestamp, signature
+    let response = await tx.submit(mcAddress, currentState, globalID, email, phone, identityCard, paramObj.timestamp, paramObj.signature);
+
+    console.log(tx);
+    let retReporter = Reporter.fromBuffer(response);
+    return retReporter;
+}
+
 
 function fnByOpName(opName) {
     switch (opName) {
         case 'addEditor': return addEditor;
-        case '': return undefined;
+        case 'addReporter': return addReporter;
     }
 }
 
@@ -69,14 +89,14 @@ async function upload2ChainAsync(opName, paramObj) {
         const network = await gateway.getNetwork('mychannel');
 
         // Get addressability to commercial paper contract
-        console.log('Use org.papernet.commercialpaper smart contract.');
+        console.log('Use org.mediachain smart contract.');
 
         const contract = await network.getContract('mycc');
         let context = this;
         let fn = fnByOpName(opName);
         await fn.call(context, contract, paramObj);
     } catch (error) {
-        console.log(`Error processing transaction. ${error}`);
+        console.log(`Error processing transaction.${error} `);
         console.log(error.stack);
     }
     finally {

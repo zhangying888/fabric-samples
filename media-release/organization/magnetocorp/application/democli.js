@@ -46,17 +46,16 @@ argv.wrap(argv.terminalWidth())
             return upload2chain('addEditor', { mcaddress });
         }
     )
-    // .usage('node democli.js u2cEditorIdentity --mcaddress xxx')
-    // .command('u2cReporterIdentity', 'add editor identity to chain',
-    //     function (yargs) {
-    //         // mcaddress, reporterName, globalId, identityCard, timestamp, signature
-    //         // this.mcAddress, this.globalID, this.timestamp, this.identityCard
-    //         return yargs.option('mcaddress').option('globalId').option('timestamp').option('identityCard').option('signature');
-    //     },
-    //     function ({ mcaddress, globalId, timestamp, identityCard, signature }) {
-    //         return u2cReporterIdentity(mcaddress, globalId, timestamp, identityCard, signature);
-    //     }
-    // )
+    .usage('democli addReporter --mcaddress xxx --globalId Reporter0001 --timestamp xxx --identityCard xxx --signature xxx')
+    .command('addReporter', 'add Reporter identity to chain',
+        function (yargs) {
+            // mcaddress, reporterName, globalId, identityCard, timestamp, signature
+            return yargs.option('mcaddress').option('globalId').option('timestamp').option('identityCard').option('signature');
+        },
+        function ({ mcaddress, globalId, timestamp, identityCard, signature }) {
+            return upload2chain('addReporter', { mcaddress, globalId, timestamp, identityCard, signature });
+        }
+    )
     .argv;
 
 // mcaddress, reporterName, globalID, identityCard, timestamp, signature

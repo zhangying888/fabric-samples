@@ -46,7 +46,6 @@ function reporterApply(role, reporterName, globalID, identityCard) {
 
     let obj = { username: reporterName, publicKey: outPubKey, privateKey: outPrivKey };
     writJson2File(getUserCfgPath(reporterName), obj);
-
 }
 
 module.exports = reporterApply;
