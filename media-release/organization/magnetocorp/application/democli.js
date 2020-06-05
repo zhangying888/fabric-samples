@@ -3,7 +3,9 @@
 const argv = require('yargs');
 const fnRegister = require('./register.js');
 const fnAddOrUpdate = require('./imageop.js');
-const { ucEditorIdentity } = require('./mediachainops.js');
+const {
+    upload2chain
+} = require('./mediachainops.js');
 
 argv.wrap(argv.terminalWidth())
     .usage('Usage: $0 <command> [options]')
@@ -33,16 +35,31 @@ argv.wrap(argv.terminalWidth())
         function ({ globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl }) {
             return fnAddOrUpdate(globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl);
         }
-    ).usage('node democli.js ucEditorIdentity --mcaddress xxx')
-    .command('ucEditorIdentity', 'add editor identity to chain',
+    ).usage('node democli.js addEditor --mcaddress xxx')
+    .command('addEditor', 'add editor identity to chain',
         function (yargs) {
             // globalID, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl
             return yargs.option('mcaddress');
         },
         function ({ mcaddress }) {
-            return ucEditorIdentity(mcaddress);
+            // upload2chain(action, paramObj)
+            return upload2chain('addEditor', { mcaddress });
         }
     )
+    // .usage('node democli.js u2cEditorIdentity --mcaddress xxx')
+    // .command('u2cReporterIdentity', 'add editor identity to chain',
+    //     function (yargs) {
+    //         // mcaddress, reporterName, globalId, identityCard, timestamp, signature
+    //         // this.mcAddress, this.globalID, this.timestamp, this.identityCard
+    //         return yargs.option('mcaddress').option('globalId').option('timestamp').option('identityCard').option('signature');
+    //     },
+    //     function ({ mcaddress, globalId, timestamp, identityCard, signature }) {
+    //         return u2cReporterIdentity(mcaddress, globalId, timestamp, identityCard, signature);
+    //     }
+    // )
     .argv;
 
+// mcaddress, reporterName, globalID, identityCard, timestamp, signature
 // node democli.js genRegisterReporter --username guodegang --globalId editor0001 --identityCard 110011198806061234
+// 类似于模板一样去实现，根本上这里需要什么
+// node democli.js 
