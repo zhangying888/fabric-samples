@@ -16,7 +16,7 @@ async function main() {
     // Main try/catch block
     try {
         // A wallet stores a collection of identities
-        const wallet = await Wallets.newFileSystemWallet('/tmp/test/identity/user/isabella/wallet');
+        const wallet = await Wallets.newFileSystemWallet('/tmp/identity/user/isabella/wallet');
 
         // Identity to credentials to be stored in the wallet
         // const credPath = path.join(fixtures, '/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com');

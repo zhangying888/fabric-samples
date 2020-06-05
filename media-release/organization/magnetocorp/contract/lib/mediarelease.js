@@ -79,9 +79,9 @@ class MediaReleaseContract extends Contract {
     async addReporter(ctx, mcAddress, currentState, globalID, email, phone, identityCard, signature) {
         // mcAddress, currentState, globalID, email, phone, identityCard, signature
         let reporter = Reporter.createInstance(mcAddress, currentState, globalID, email, phone, identityCard, signature);
-        if (!MyCrypto.verifySig(signature, reporter.getMsgHash(), mcAddress)) {
-            throw new Error('invalid signature for addReporter');
-        }
+        // if (!MyCrypto.verifySig(signature, reporter.getMsgHash(), mcAddress)) {
+        //     throw new Error('invalid signature for addReporter');
+        // }
         // TODO: verify user signature
         await ctx.stateAgent.add(reporter);
         return reporter;

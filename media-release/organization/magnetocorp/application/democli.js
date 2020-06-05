@@ -20,7 +20,7 @@ argv.usage('Usage: $0 <command> [options]')
             return yargs.option('username').option('globalId').option('identityCard');
         },
         function ({ role, username, globalId, identityCard }) {
-            fnRegister('reporter', username, globalId, identityCard);
+            fnRegister('editor', username, globalId, identityCard);
         }
     ).usage('node democli.js genRegisterEditor --username guodegang --globalId editor0001 --identityCard 110011198806061234')
     .command('addOrUpdateImage', 'add or update image',
