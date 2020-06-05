@@ -148,7 +148,7 @@ async function main() {
         const network = await gateway.getNetwork('mychannel');
 
         // Get addressability to commercial paper contract
-        console.log('Use org.papernet.commercialpaper smart contract.');
+        console.log('Use org.mediachain smart contract.');
 
         const contract = await network.getContract('mycc');
 
