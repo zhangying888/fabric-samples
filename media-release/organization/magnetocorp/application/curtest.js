@@ -96,83 +96,26 @@ async function getClue(contract) {
 }
 
 // Main program function
-async function main() {
+async function ucEditorIdentity_local(mcaddress) {
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet('/tmp/identity/user/isabella/wallet');
+    console.log('dummy call ucEditorIdentity_local ');
 
-    // A gateway defines the peers used to access Fabric networks
-    const gateway = new Gateway();
-
-    // Main try/catch block
-    try {
-
-        // Specify userName for network access
-        // const userName = 'isabella.issuer@magnetocorp.com';
-        const userName = 'isabella';
-
-        // Load connection profile; will be used to locate a gateway
-        let connectionProfile = yaml.safeLoad(fs.readFileSync('/home/zy/go/src/github.com/hyperledger/fabric-samples/first-network/connection-org2.yaml', 'utf8'));
-
-        // Set connection options; identity and wallet
-        let connectionOptions = {
-            identity: userName,
-            wallet: wallet,
-            discovery: { enabled: true, asLocalhost: true }
-        };
-
-        // Connect to gateway using application specified parameters
-        console.log('Connect to Fabric gateway.');
-
-        await gateway.connect(connectionProfile, connectionOptions);
-
-        // Access PaperNet network
-        console.log('Use network channel: mychannel.');
-
-        const network = await gateway.getNetwork('mychannel');
-
-        // Get addressability to commercial paper contract
-        console.log('Use org.papernet.commercialpaper smart contract.');
-
-        const contract = await network.getContract('papercontract');
-
-
-        // --------------------------------------------------------------------------------------------
-
-        let clue = await addClue(contract);
-        sleep(5);
-        let retClue = await getClue(contract);
-        assert(clue.globalID === retClue.globalID);
-        assert(clue.contentHash === retClue.contentHash);
-
-        // let originMaterial = await addMaterial(contract);
-        // sleep(5);
-        // let retMaterial = await getMaterial(contract);
-        // assert(originMaterial.globalID === retMaterial.globalID);
-        // assert(originMaterial.contentHash === retMaterial.contentHash);
-
-    } catch (error) {
-
-        console.log(`Error processing transaction. ${error}`);
-        console.log(error.stack);
-
-    } finally {
-
-        // Disconnect from the gateway
-        console.log('Disconnect from Fabric gateway.');
-        gateway.disconnect();
-
-    }
 }
-main().then(() => {
 
-    console.log('Issue program complete.');
+function ucEditorIdentity(mcaddress) {
+    ucEditorIdentity_local(mcaddress).then(() => {
+        console.log('Issue program complete.');
 
-}).catch((e) => {
+    }).catch((e) => {
 
-    console.log('Issue program exception.');
-    console.log(e);
-    console.log(e.stack);
-    process.exit(-1);
+        console.log('Issue program exception.');
+        console.log(e);
+        console.log(e.stack);
+        process.exit(-1);
 
-});
+    });
+}
+
+module.exports = { ucEditorIdentity };

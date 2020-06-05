@@ -191,18 +191,16 @@ async function main() {
         // let clue = await getClue(contract);
         // console.log(clue);
     } catch (error) {
-
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
-
     } finally {
-
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         gateway.disconnect();
 
     }
 }
+
 main().then(() => {
 
     console.log('Issue program complete.');
