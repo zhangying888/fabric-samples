@@ -3,7 +3,7 @@
 const argv = require('yargs');
 const fnRegister = require('./register.js');
 const fnAddOrUpdate = require('./imageop.js');
-const { ucEditorIdentity } = require('./curtest.js');
+const { ucEditorIdentity } = require('./mediachainops.js');
 
 argv.wrap(argv.terminalWidth())
     .usage('Usage: $0 <command> [options]')
