@@ -4,6 +4,7 @@
 // Bring key classes into scope, most importantly Fabric SDK network class
 const assert = require('assert');
 const fs = require('fs');
+const fse = require('fs-extra');
 const yaml = require('js-yaml');
 const { Wallets, Gateway } = require('fabric-network');
 const Editor = require('../contract/lib/editor.js');
@@ -24,7 +25,7 @@ async function addEditor(contract, paramObj) {
     console.log(tx);
     let retEditor = Editor.fromBuffer(response);
 
-    return retEditor;
+    return {obj: retEditor, tx:tx};
 }
 
 async function addReporter(contract, paramObj) {
@@ -43,7 +44,7 @@ async function addReporter(contract, paramObj) {
 
     console.log(tx);
     let retReporter = Reporter.fromBuffer(response);
-    return retReporter;
+    return {obj:retReporter, tx:tx};
 }
 
 
@@ -94,7 +95,11 @@ async function upload2ChainAsync(opName, paramObj) {
         const contract = await network.getContract('mycc');
         let context = this;
         let fn = fnByOpName(opName);
-        await fn.call(context, contract, paramObj);
+        let ret = await fn.call(context, contract, paramObj);
+
+        fse.writeJSONSync(
+            '/home/zy/demo/dummyRpcResult.json',
+            {txid: ret.tx.getTransactionId()});
     } catch (error) {
         console.log(`Error processing transaction.${error} `);
         console.log(error.stack);
