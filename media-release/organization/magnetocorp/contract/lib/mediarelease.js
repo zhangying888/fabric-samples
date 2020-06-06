@@ -131,7 +131,7 @@ class MediaReleaseContract extends Contract {
     /*
     materials: materials array, every material represent by a [material_global_id:version_code]
     */
-    async addClue(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature) {
+    async addClue(ctx, globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, signature) {
         //version code key 不能已经存在        
         // let clueKey = VersionHead.getClueKey(globalID);
         // let nilClue = await ctx.stateAgent.get(clueKey);
@@ -145,7 +145,7 @@ class MediaReleaseContract extends Contract {
         let versionHead = VersionHead.createInstance('clue', globalID, versionCode);
         await ctx.stateAgent.add(versionHead);
         // check material exist
-        let clue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, materials, signature);
+        let clue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, signature);
         await ctx.stateAgent.add(clue);
         return clue;
     }

@@ -68,6 +68,17 @@ argv.wrap(argv.terminalWidth())
             return upload2chain('addMaterial', { globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl });
         }
     )
+    .usage('democli addClue --globalId xxx --versionCode x --title xxx --contentHash xx --user xx --sourceUrl xxx')
+    .command('addClue', 'add a clue',
+        function (yargs) {
+            // mcaddress, reporterName, globalId, identityCard, timestamp, signature
+            return yargs.option('globalId').option('versionCode').option('title').option('contentHash').option('user')
+                .option('sourceUrl');
+        },
+        function ({ globalId, versionCode, title, contentHash, user, sourceUrl }) {
+            return upload2chain('addClue', { globalId, versionCode, title, contentHash, user, sourceUrl });
+        }
+    )
     .argv;
 
 // mcaddress, reporterName, globalID, identityCard, timestamp, signature

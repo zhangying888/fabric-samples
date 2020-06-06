@@ -71,12 +71,39 @@ async function addMaterial(contract, paramObj) {
     return { obj: retMaterial, tx: tx };
 }
 
+async function addClue(contract, paramObj) {
+    // globalId, versionCode, title, --publishDate--, contentHash, --status--, user, , signature
+    console.log(paramObj);
+
+    let globalID = paramObj.globalId;
+    let versionCode = paramObj.versionCode;
+    let title = paramObj.title;
+    let publishDate = DemoUtil.getDateTime();
+    let contentHash = paramObj.contentHash;
+    let status = 'public';
+    let user = paramObj.user;
+    let modifiedDate = publishDate;
+    let sourceUrl = paramObj.sourceUrl;
+
+    let signature = 'dummy_sign';
+
+    console.log({ globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, signature });
+
+    let tx = contract.createTransaction('addClue');
+    let response = await tx.submit(
+        globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, signature);
+    console.log(tx);
+    let retClue = Clue.fromBuffer(response);
+    return { obj: retClue, tx: tx };
+}
+
 
 function fnByOpName(opName) {
     switch (opName) {
         case 'addEditor': return addEditor;
         case 'addReporter': return addReporter;
         case 'addMaterial': return addMaterial;
+        case 'addClue': return addClue;
     }
 }
 
