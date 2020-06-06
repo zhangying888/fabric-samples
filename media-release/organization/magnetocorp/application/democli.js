@@ -56,6 +56,18 @@ argv.wrap(argv.terminalWidth())
             return upload2chain('addReporter', { mcaddress, globalId, timestamp, identityCard, signature });
         }
     )
+    //globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl
+    .usage('democli addMaterial --globalId xxx --versionCode x --title xxx --contentHash xxx --user xxx --modified_user xxx --sourceName xxx --sourceUrl xxx')
+    .command('addMaterial', 'add atomic material:such image or video file',
+        function (yargs) {
+            // mcaddress, reporterName, globalId, identityCard, timestamp, signature
+            return yargs.option('globalId').option('versionCode').option('title').option('contentHash').option('user')
+                .option('modified_user').option('sourceName').option('sourceUrl');
+        },
+        function ({ globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl }) {
+            return upload2chain('addMaterial', { globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl });
+        }
+    )
     .argv;
 
 // mcaddress, reporterName, globalID, identityCard, timestamp, signature

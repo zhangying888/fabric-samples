@@ -12,6 +12,7 @@ const Reporter = require('../contract/lib/reporter.js');
 const Clue = require('../contract/lib/clue.js');
 const VersionHead = require('../contract/lib/versionhead.js');
 const Material = require('../contract/lib/material.js');
+const DemoUtil = require('./demoutil.js');
 
 
 async function addEditor(contract, paramObj) {
@@ -25,7 +26,7 @@ async function addEditor(contract, paramObj) {
     console.log(tx);
     let retEditor = Editor.fromBuffer(response);
 
-    return {obj: retEditor, tx:tx};
+    return { obj: retEditor, tx: tx };
 }
 
 async function addReporter(contract, paramObj) {
@@ -44,7 +45,30 @@ async function addReporter(contract, paramObj) {
 
     console.log(tx);
     let retReporter = Reporter.fromBuffer(response);
-    return {obj:retReporter, tx:tx};
+    return { obj: retReporter, tx: tx };
+}
+
+async function addMaterial(contract, paramObj) {
+    // addOrUpdate(globalId, versionCode, title, contentHash, user, modified_user, sourceName, sourceUrl) {
+    let globalID = paramObj.globalId;
+    let versionCode = paramObj.versionCode;
+    let title = paramObj.title;
+    let publishDate = DemoUtil.getDateTime();
+    let fileContentHash = paramObj.contentHash;
+    let status = 'public';
+    let user = paramObj.modified_user;
+    let modifiedDate = publishDate;
+    let sourceName = paramObj.sourceName;
+    let sourceUrl = paramObj.sourceUrl;
+
+    let signature = 'dummy_signature_by_user';
+
+    let tx = contract.createTransaction('addMaterial');
+    let response = await tx.submit(
+        globalID, versionCode, title, publishDate, fileContentHash, status, user, modifiedDate, sourceName, sourceUrl, signature);
+    console.log(tx);
+    let retMaterial = Material.fromBuffer(response);
+    return { obj: retMaterial, tx: tx };
 }
 
 
@@ -52,6 +76,7 @@ function fnByOpName(opName) {
     switch (opName) {
         case 'addEditor': return addEditor;
         case 'addReporter': return addReporter;
+        case 'addMaterial': return addMaterial;
     }
 }
 
@@ -97,9 +122,13 @@ async function upload2ChainAsync(opName, paramObj) {
         let fn = fnByOpName(opName);
         let ret = await fn.call(context, contract, paramObj);
 
+        if (fse.existsSync('/home/zy/demo/dummyRpcResult.json')) {
+            fse.removeSync('/home/zy/demo/dummyRpcResult.json');
+            fse.createFileSync('/home/zy/demo/dummyRpcResult.json');
+        }
         fse.writeJSONSync(
             '/home/zy/demo/dummyRpcResult.json',
-            {txid: ret.tx.getTransactionId()});
+            { txid: ret.tx.getTransactionId() });
     } catch (error) {
         console.log(`Error processing transaction.${error} `);
         console.log(error.stack);
