@@ -13,7 +13,20 @@ const Clue = require('../contract/lib/clue.js');
 const VersionHead = require('../contract/lib/versionhead.js');
 const Material = require('../contract/lib/material.js');
 const DemoUtil = require('./demoutil.js');
+const MyCrypto = require('../contract/lib/cryptoutil.js');
 
+
+function getUserPrivateKey(username) {
+    let cfgPath = `/home/zy/demo/${username}.json`;
+    let cfg = fse.readJSONSync(cfgPath);
+    return cfg.privateKey;
+}
+
+async function userGenSignature(user, destObj) {
+    let priv = getUserPrivateKey(user);
+    let msg = destObj.getMsgHash();
+    return MyCrypto.signMsg(msg, MyCrypto.importFromPrivateKey(priv));
+}
 
 async function addEditor(contract, paramObj) {
     // mcAddress, currentState, globalID, email, phone, identityCard, signature
@@ -61,7 +74,9 @@ async function addMaterial(contract, paramObj) {
     let sourceName = paramObj.sourceName;
     let sourceUrl = paramObj.sourceUrl;
 
-    let signature = 'dummy_signature_by_user';
+    // (globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceName, sourceUrl, signature)
+    let tempMaterial = Material.createInstance(globalID, versionCode, title, publishDate, fileContentHash, status, user, modifiedDate, sourceName, sourceUrl, 'padding');
+    let signature = userGenSignature(paramObj.modified_user, tempMaterial);
 
     let tx = contract.createTransaction('addMaterial');
     let response = await tx.submit(
@@ -85,7 +100,10 @@ async function addClue(contract, paramObj) {
     let modifiedDate = publishDate;
     let sourceUrl = paramObj.sourceUrl;
 
-    let signature = 'dummy_sign';
+    // globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, signature
+    let tempClue = Clue.createInstance(globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, 'padding');
+
+    let signature = userGenSignature(paramObj.user, tempClue);
 
     console.log({ globalID, versionCode, title, publishDate, contentHash, status, user, modifiedDate, sourceUrl, signature });
 

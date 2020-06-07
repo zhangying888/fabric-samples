@@ -6,6 +6,8 @@ SPDX-License-Identifier: Apache-2.0
 
 // Utility class for ledger state
 const State = require('./../ledger-api/state.js');
+const MyCrypto = require('./cryptoutil');
+
 
 // Enumerate commercial paper state values
 const MaterialState = {
@@ -18,30 +20,14 @@ const MaterialState = {
  * Class will be used by application and smart contract to define a paper
  */
 class Material extends State {
-    /*
-  `PublishDate` int(11) unsigned DEFAULT '0',
-  `ContentHash`,
-  `User` int(11) DEFAULT NULL,
-  `Status` int(11) DEFAULT NULL,
-  `IsPhotoNews` tinyint(4) DEFAULT NULL,
-  `CreateDate` int(11) unsigned DEFAULT '0',
-  `ModifiedDate` int(11) unsigned DEFAULT '0',
-  `GenerateFileDate` int(11) unsigned DEFAULT '0',
-  `Photo` varchar(250) DEFAULT NULL,
-  `ModifiedUser` int(11) DEFAULT NULL,
-  `SourceName` varchar(250) DEFAULT NULL,
-  `UserId` int(11) DEFAULT '0',
-  `SourceUrl` varchar(250) DEFAULT NULL,
-  `ClueGid` int(11) DEFAULT '0',
-  `ClueGroupid` int(11) DEFAULT '0',
-     */
     constructor(obj) {
         super(Material.getClass(), [obj.globalID, obj.versionCode]);
         Object.assign(this, obj);
     }
 
     getMsgHash() {
-
+        let characterMsg = [this.globalID, this.versionCode, this.contentHash].join();
+        return MyCrypto.hash(characterMsg);
     }
 
     getSignature() {
@@ -101,7 +87,7 @@ class Material extends State {
     }
 
     getStatus() {
-        return status;
+        return this.status;
     }
 
     setStatus(status) {
