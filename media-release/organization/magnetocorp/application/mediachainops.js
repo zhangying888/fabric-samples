@@ -22,7 +22,7 @@ function getUserPrivateKey(username) {
     return cfg.privateKey;
 }
 
-async function userGenSignature(user, destObj) {
+function userGenSignature(user, destObj) {
     let priv = getUserPrivateKey(user);
     let msg = destObj.getMsgHash();
     return MyCrypto.signMsg(msg, MyCrypto.importFromPrivateKey(priv));
